@@ -6,19 +6,20 @@
 /*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:37 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/16 22:45:14 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/17 01:38:03 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ms_test.h"
 
-int	if_replace_value(t_env **lst, t_env *new)
+int	if_replace_value(t_env_var **lst, t_env *new)
 {
-	while (*lst && ft_strcmp((*lst)->varname, new->varname) <= 0)
+	while (*lst && ft_strcmp((*lst)->exports->varname, new->varname) <= 0)
 	{
-		if (ft_strcmp((*lst)->varname, new->varname) == 0)
+		if (ft_strcmp((*lst)->exports->varname, new->varname) == 0)
 		{
-			(*lst)->value = ft_strdup(new->value);
+			(*lst)->exports->value = ft_strdup(new->value);
+			(*lst)->envs->value = ft_strdup(new->value);
 			free_node(&new);
 			return (1);
 		}

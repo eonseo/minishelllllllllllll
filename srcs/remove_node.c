@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:22:27 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/14 00:18:26 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/17 00:47:35 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	remove_head(t_env **lst)
 	t_env	*del_node;
 
 	del_node = *lst;
-	*lst = (*lst)->next;
+	*lst = del_node->next;
 	(*lst)->prev = NULL;
 	free_node(&del_node);
 }
@@ -48,7 +48,9 @@ void	remove_if(t_env **export, char *varname)
 	tmp = *export;
 	if (ft_strcmp(tmp->varname, varname) == 0)
 	{
-		remove_head(export);
+		printf("first lst = %s\n", tmp->varname);
+		remove_head(&tmp);
+		printf("remove head = %s\n", tmp->varname);
 		return ;
 	}
 	while (tmp->next)

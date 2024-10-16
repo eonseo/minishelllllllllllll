@@ -6,7 +6,7 @@
 /*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 16:17:44 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/16 23:16:02 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/17 01:39:16 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,8 @@ void	export(t_tokken_list *option, t_env_var **env_list)
 	else
 		value = ft_strdup("");
 	new = make_new_node(varname, value);
-	if (if_replace_value(&(*env_list)->exports, new) == 1)
-	{
-		if_replace_value()
+	if (if_replace_value(&tmp, new) == 1)
 		return ;
-	}
 	insert_in_export_lst(&(*env_list)->exports, new);
 	insert_in_env_list(&(*env_list)->envs, new);
 	free(varname);

@@ -6,7 +6,7 @@
 /*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 21:31:29 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/16 23:00:12 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/17 01:38:14 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void	remove_if(t_env **export, char *varname);
 void	insert_at_head(t_env **lst, t_env *new);
 void	insert_at_middle(t_env *node, t_env *new);
 void	insert_at_end(t_env *node, t_env *new);
-int		if_replace_value(t_env **lst, t_env *new);
+int		if_replace_value(t_env_var **lst, t_env *new);
 void	lst_back(t_env *node, t_env *new);
 void	insert_in_export_lst(t_env **lst, t_env *new);
 void	insert_in_env_list(t_env **lst, t_env *new);
