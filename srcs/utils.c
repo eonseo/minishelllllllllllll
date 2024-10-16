@@ -3,26 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 17:10:04 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/14 00:21:18 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/16 22:32:31 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ms_test.h"
 
-char	*get_directory_path(char *path)
+char	*get_directory_path(t_env_var *env_list, char *path)
 {
 	char	*homepath;
 
 	homepath = getenv("HOME");
 	if (*path == '~')
 		path = ft_strjoin(homepath, path);
+	// if (*path == '-')
+	// {
+	// 	if (env_list->oldpwd)
+	// }
 	return (path);
 }
 
 int	ft_strcmp(char *s1, char *s2)
+{
+	while (*s1 || *s2)
+	{
+		if (*s1 != *s2)
+			return (*s1 - *s2);
+		s1++;
+		s2++;
+	}
+	return (*s1 - *s2);
+}
+
+int	ft_const_strcmp(const char *s1, char *s2)
 {
 	while (*s1 || *s2)
 	{

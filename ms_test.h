@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ms_test.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/14 21:31:29 by eonoh             #+#    #+#             */
+/*   Updated: 2024/10/16 23:00:12 by eonoh            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MS_TEST_H
 # define MS_TEST_H
 
@@ -27,7 +39,7 @@ typedef enum	e_builtin_code
 	EXPORT,
 	PWD,
 	UNSET,
-}	t_builtin_code;
+}	t_code;
 
 
 typedef struct s_env
@@ -41,7 +53,8 @@ typedef struct s_env
 typedef struct	s_env_var
 {
 	t_env	*envs;
-	t_env	*export;
+	t_env	*exports;
+	char	*oldpwd;
 }	t_env_var;
 
 typedef struct s_flag
@@ -54,12 +67,6 @@ typedef struct s_tokken_list
 	char			*content;
 	struct s_tokken_list	*next;
 }					t_tokken_list;
-
-//typedef struct s_list
-//{
-//	void			*content;
-//	struct s_list	*next;
-//}					t_list;
 
 typedef struct s_val
 {
@@ -93,7 +100,7 @@ void	ft_lstadd_back(t_tokken_list **lst, t_tokken_list *new);
 void	ft_lstclear(t_tokken_list **lst);
 
 //token
-void	ft_tokenizer(char *line, char **envp);
+void	ft_tokenizer(char *line, char **envp, t_env_var *env_list);
 void	ft_in_pipe(char *line, char **envp, t_tokken_list **tokken);
 char	*ft_alpha_digit(char *line, int *i);
 char	*ft_double_qoute_check(char *line, int *i, char **envp);
@@ -138,33 +145,34 @@ char	*store_path(char **envp);
 char	*find_path(char *argv, const char *env);
 void	ft_val_set(t_tokken_list *tokken, t_val *val);
 void	error(char *s, int num);
-void	execute_cmd(t_tokken_list *tokken, char **envp);
+void	execute_cmd(t_tokken_list *tokken, char **envp, t_env_var *env_list);
 void	ft_redir(t_tokken_list *tokken, t_val *val);
-void	ft_paser_manager(t_tokken_list *tokken, char **envp);
+void	ft_paser_manager(t_tokken_list *tokken, char **envp, t_env_var *env_list);
 void	free_path(char **paths);
 
 //redir
-void	ft_redir_open(t_tokken_list *tokken, t_val *val);
-void	ft_redir_out(t_tokken_list *tokken, t_val *val);
-void	ft_redir_add(t_tokken_list *tokken, t_val *val);
+void	ft_redir_open(t_tokken_list *lst, t_val *val, t_tokken_list **tokken);
+void	ft_redir_out(t_tokken_list *lst, t_val *val, t_tokken_list **tokken);
+void	ft_redir_add(t_tokken_list *lst, t_val *val, t_tokken_list **tokken);
 
 void	ft_find_cmd(t_tokken_list *tokken, t_val *val);
-void	ft_dup(t_val *val, char **envp);
+void	ft_dup(t_val *val, char **envp, t_env_var *env_list);
 void	ft_find_pipe(t_tokken_list *tokken, t_val *val, int *pipefd);
-void	ft_find_redir(t_tokken_list *tokken, t_val *val);
+void	ft_find_redir(t_tokken_list **tokken, t_val *val);
 
 // builtin.c
-void	cd(char **s);
-void	echo(char **s);
+void	cd(t_env_var *env_list, t_tokken_list *option);
+void	echo(t_tokken_list *option);
 void	pwd(void);
-t_env	*export(char *argv, char **envp, t_env_var *env);
-void	sort_env(char **env, t_env **envs);
+void	export(t_tokken_list *option, t_env_var **env_list);
 
 // utils.c
-char	*get_directory_path(char *path);
+char	*get_directory_path(t_env_var *env_list, char *path);
 int		ft_strcmp(char *s1, char *s2);
+int		ft_const_strcmp(const char *s1, char *s2);
 int		get_compare_num(long long digit, long long num);
 int		compare_two_digits(char *s, int compare_num1, int compare_num2);
+char	*ft_strjoin1(char const *s1, char const *s2);
 
 // export_parsing.c
 int		get_equal_sign_idx(char *s);
@@ -172,8 +180,7 @@ char	*parse_varname(char *s, int equal_sign_idx);
 char	*parse_value(char *s, int equal_sign_idx);
 
 // builtin2.c
-void	sort_export(char **env, t_env **export);
-t_env	*unset(t_env *export, char *argv);
+void	unset(t_tokken_list *option, t_env_var **env_list);
 void	do_exit(char *argv);
 
 // error.c
@@ -190,16 +197,17 @@ void	remove_if(t_env **export, char *varname);
 void	insert_at_head(t_env **lst, t_env *new);
 void	insert_at_middle(t_env *node, t_env *new);
 void	insert_at_end(t_env *node, t_env *new);
+int		if_replace_value(t_env **lst, t_env *new);
 void	lst_back(t_env *node, t_env *new);
 void	insert_in_export_lst(t_env **lst, t_env *new);
 void	insert_in_env_list(t_env **lst, t_env *new);
 
 // list_utils.c
-t_env	*make_new_node(char *varname, char *value);
 void	free_node(t_env **export);
 void	free_list(t_env **export);
+
+// print.c
 void	print_export_list(t_env *export);
-char	*ft_strjoin1(char const *s1, char const *s2);
 void	print_env_list(t_env *envs);
 
 // longlong.c
@@ -209,7 +217,12 @@ int		is_ll_underflow(char *s);
 int		is_in_ll_bound(char *s);
 
 // execute_builtin.c
-t_builtin_code	is_builtin(t_val *val);
-void			ft_check_bulitin(t_tokken_list *lst, char **envp, char *av);
+t_code	is_builtin(t_tokken_list *lst);
+int		ft_check_bulitin(t_tokken_list *lst, t_env_var *env_list);
+
+// make_env_variables.c
+t_env	*make_new_node(char *varname, char *value);
+void	make_export_list(char **env, t_env **export);
+void	make_env_list(char **env, t_env **env_list);
 
 #endif /* MS_TEST_H*/

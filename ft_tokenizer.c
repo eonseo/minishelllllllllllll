@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tokenizer.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seojang <seojang@student.42gyeongsan.kr    +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 17:25:52 by seojang           #+#    #+#             */
-/*   Updated: 2024/10/13 18:48:52 by seojang          ###   ########.fr       */
+/*   Updated: 2024/10/15 03:07:02 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,7 @@ void	ft_in_pipe(char *line, char **envp, t_tokken_list **tokken)
 	}
 }
 
-void	ft_tokenizer(char *line, char **envp)
+void	ft_tokenizer(char *line, char **envp, t_env_var *env_list)
 {
 	t_flag	flag;
 	t_tokken_list	*tokken;
@@ -284,5 +284,5 @@ void	ft_tokenizer(char *line, char **envp)
 		lst = lst->next;
 		i++;
 	}
-	ft_paser_manager(tokken, envp);
+	ft_paser_manager(tokken, envp, env_list);
 }

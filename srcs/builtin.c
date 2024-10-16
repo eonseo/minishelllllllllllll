@@ -3,46 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 16:17:44 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/14 18:44:47 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/16 23:16:02 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ms_test.h"
 
-void	echo(char **s)
+void	echo(t_tokken_list *option)
 {
-	int	newline_flag;
+	int				newline_flag;
+	t_tokken_list	*tmp;
 
 	newline_flag = 1;
-	if (ft_strncmp(*s, "-n", 2) == 0)
+	tmp = option;
+	if (ft_strncmp(tmp->content, "-n", 2) == 0)
 	{
 		newline_flag = 0;
-		s++;
+		tmp = tmp->next;
 	}
-	ft_printf("%s", *s);
+	ft_printf("%s", tmp->content);
 	if (newline_flag == 1)
 		ft_printf("\n");
-	exit(EXIT_SUCCESS);
+	return ;
 }
 
-void	cd(char **s)
+// list 에 빈문자열 넣었을 때 segfault 뜨는 것 처리하기
+// oldpwd 셋팅: cd 하기 전 oldpwd를 저장. 성공시 env_list->oldpwd = oldpwd. export list 와 envlist 에 넣기.
+// unset oldpwd 시 env_list->oldpwd = null, export list와 envlist에서 지우기
+// oldpwd 가 setting 되어있으면 dirpath = oldpwd
+// oldpwd 가 없으면 perror
+void	cd(t_env_var *env_list, t_tokken_list *option)
 {
+	t_env	*new;
 	int		result;
+	char	*oldpwd;
 	char	*directory_path;
 
-	directory_path = get_directory_path(*s);
+	oldpwd = NULL;
+	directory_path = get_directory_path(env_list, option->content);
 	if (directory_path == NULL)
 		return ;
+	oldpwd = getcwd(oldpwd, 0);
 	result = chdir((const char *)directory_path);
 	if (result == -1)
 	{
 		perror(directory_path);
 		return ;
 	}
-	exit(EXIT_SUCCESS);
+	printf("oldpwd = %s\n", oldpwd);
+	new = make_new_node("OLDPWD", oldpwd);
+	if_replace_value(&env_list->exports, new);
+	if_replace_value(&env_list->envs, new);
+
+	return ;
 }
 
 void	pwd(void)
@@ -59,53 +75,38 @@ void	pwd(void)
 	ft_printf("%s", cwd);
 	ft_printf("\n");
 	free(cwd);
-	exit(EXIT_SUCCESS);
+	return ;
 }
 
-void	sort_env(char **env, t_env **env_list)
+// 아직 고치는중 .. 
+void	export(t_tokken_list *option, t_env_var **env_list)
 {
-	t_env	*new;
-	int		equal_sign_idx;
-	char	*varname;
-	char	*value;
+	t_env		*new;
+	t_env_var	*tmp;
+	char		*varname;
+	char		*value;
 
-	if (!env_list)
-		return ;
-	while (*env)
-	{
-		equal_sign_idx = get_equal_sign_idx(*env);
-		varname = parse_varname(*env, equal_sign_idx);
-		value = parse_value(*env, equal_sign_idx);
-		new = make_new_node(varname, value);
-		insert_in_env_list(env_list, new);
-		free(varname);
-		free(value);
-		env++;
-	}
-}
-
-t_env	*export(char *argv, char **envp, t_env_var *env)
-{
-	t_env	*export;
-	t_env	*new;
-	char	*varname;
-	char	*value;
-	int		equal_sign_idx;
-
-	export = NULL;
 	new = NULL;
-	sort_env(envp, &export);
-	if (argv == NULL)
+	tmp = *env_list;
+	if (!option)
 	{
-		print_export_list(export);
-		return (export);
+		print_export_list(tmp->exports);
+		return ;
 	}
-	equal_sign_idx = get_equal_sign_idx(argv);
-	varname = parse_varname(argv, equal_sign_idx);
-	value = parse_value(argv, equal_sign_idx);
+	varname = option->content;
+	if (option->next)
+		value = option->next->content;
+	else
+		value = ft_strdup("");
 	new = make_new_node(varname, value);
-	insert_in_export_lst(&export, new);
+	if (if_replace_value(&(*env_list)->exports, new) == 1)
+	{
+		if_replace_value()
+		return ;
+	}
+	insert_in_export_lst(&(*env_list)->exports, new);
+	insert_in_env_list(&(*env_list)->envs, new);
 	free(varname);
 	free(value);
-	return (export);
+	return ;
 }

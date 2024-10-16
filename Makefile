@@ -3,17 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+         #
+#    By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/07/15 09:48:53 by seojang           #+#    #+#              #
-#    Updated: 2024/10/14 00:11:46 by eonoh            ###   ########.fr        #
+#    Created: 2024/10/14 22:58:36 by eonoh             #+#    #+#              #
+#    Updated: 2024/10/15 01:13:05 by eonoh            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-
 .DEFAULT_GOAL := all
 
-CC = cc
+CC = cc -g -Wall -Wextra
 RM = rm -rf
 
 SRC = main.c \
@@ -30,11 +29,14 @@ SRC = main.c \
 	./srcs/builtin2.c \
 	./srcs/export_parsing.c \
 	./srcs/insert_node.c \
-	./srcs/list_utils.c \
 	./srcs/longlong.c \
 	./srcs/remove_node.c \
 	./srcs/utils.c \
-	./srcs/error.c
+	./srcs/error.c \
+	./srcs/free.c \
+	./srcs/make_env_variables.c \
+	./srcs/print.c \
+	execute_builtin.c
 
 HEADER = ms_test.h
 

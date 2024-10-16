@@ -1,0 +1,7 @@
+minishell>// oldpwd 가 setting 되어있으면 dirpath = oldpwd
+// oldpwd 가 setting 되어있으면 dirpath = oldpwd
+ptr[0] = oldpwd
+ptr[1] = setting
+ptr[2] = dirpath
+ptr[3] = oldpwd
+minishell>// oldpwd 가 없으면 perror

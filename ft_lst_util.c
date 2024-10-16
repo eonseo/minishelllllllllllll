@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lst_util.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seojang <seojang@student.42gyeongsan.kr    +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 19:47:34 by seojang           #+#    #+#             */
-/*   Updated: 2024/09/09 21:26:24 by seojang          ###   ########.fr       */
+/*   Updated: 2024/10/15 01:06:53 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_tokken_list	*ft_lstnew(char *content)
 	if (!p)
 		return (NULL);
 	p -> content = content;
-	p -> next = (NULL);
+	p -> next = NULL;
 	return (p);
 }
 
