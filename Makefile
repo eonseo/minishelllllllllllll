@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+         #
+#    By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/14 22:58:36 by eonoh             #+#    #+#              #
-#    Updated: 2024/10/15 01:13:05 by eonoh            ###   ########.fr        #
+#    Updated: 2024/10/18 01:54:16 by eonoh            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,8 @@ SRC = main.c \
 	./srcs/free.c \
 	./srcs/make_env_variables.c \
 	./srcs/print.c \
-	execute_builtin.c
+	execute_builtin.c \
+	./srcs/setting.c
 
 HEADER = ms_test.h
 

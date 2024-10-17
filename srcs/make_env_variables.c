@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   make_env_variables.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 21:51:19 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/16 23:15:17 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/17 23:00:08 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ms_test.h"
 
-t_env	*make_new_node(char *varname, char *value) 
+t_env	*make_new_node(char *varname, char *value)
 {
 	t_env	*new;
 

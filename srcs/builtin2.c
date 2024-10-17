@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:48:34 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/17 00:49:42 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/18 01:43:09 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,18 @@
 // list에서 varname 과 같은 걸 찾고, 같으면 지우기.
 void	unset(t_tokken_list *option, t_env_var **lst)
 {
+	t_env_var	*lst_head;
+	t_env		*exports_tmp;
+	t_env		*envs_tmp;
+
 	if (!option)
 		return ;
+	lst_head = *lst;
 	while (option)
 	{
-		printf("option content = %s\n", option->content);
-		remove_if(&(*lst)->exports, option->content);
-		printf("unset  export = %s\n", (*lst)->exports);
-		remove_if(&(*lst)->envs, option->content);
+		init_exports_env_lst(lst_head, &exports_tmp, &envs_tmp);
+		remove_if(&exports_tmp, option->content);
+		remove_if(&envs_tmp, option->content);
 		option = option->next;
 	}
 }

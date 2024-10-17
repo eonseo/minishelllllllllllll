@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_test.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 21:31:29 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/17 01:38:14 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/18 01:57:14 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct	s_env_var
 {
 	t_env	*envs;
 	t_env	*exports;
-	char	*oldpwd;
 }	t_env_var;
 
 typedef struct s_flag
@@ -117,6 +116,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *s);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+char	*search_value_by_varname(t_env *lst, char *varname);
 
 // ft_split.c
 char	**split(const char *s, char c, int size, char **p);
@@ -167,7 +167,7 @@ void	pwd(void);
 void	export(t_tokken_list *option, t_env_var **env_list);
 
 // utils.c
-char	*get_directory_path(t_env_var *env_list, char *path);
+char	*get_directory_path(t_env *lst, char *path);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_const_strcmp(const char *s1, char *s2);
 int		get_compare_num(long long digit, long long num);
@@ -197,7 +197,8 @@ void	remove_if(t_env **export, char *varname);
 void	insert_at_head(t_env **lst, t_env *new);
 void	insert_at_middle(t_env *node, t_env *new);
 void	insert_at_end(t_env *node, t_env *new);
-int		if_replace_value(t_env_var **lst, t_env *new);
+int		check_same_varname(t_env_var **lst, char *varname, char *value);
+int		if_replace_value(t_env *lst, char *varname, char *value);
 void	lst_back(t_env *node, t_env *new);
 void	insert_in_export_lst(t_env **lst, t_env *new);
 void	insert_in_env_list(t_env **lst, t_env *new);
@@ -218,11 +219,13 @@ int		is_in_ll_bound(char *s);
 
 // execute_builtin.c
 t_code	is_builtin(t_tokken_list *lst);
-int		ft_check_bulitin(t_tokken_list *lst, t_env_var *env_list);
+int		ft_check_bulitin(t_tokken_list *lst, t_env_var **env_list);
 
 // make_env_variables.c
 t_env	*make_new_node(char *varname, char *value);
 void	make_export_list(char **env, t_env **export);
 void	make_env_list(char **env, t_env **env_list);
 
+// settings.c
+void	init_exports_env_lst(t_env_var *lst_head, t_env **exports, t_env **envs);
 #endif /* MS_TEST_H*/

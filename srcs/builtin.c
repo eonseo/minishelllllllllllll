@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 16:17:44 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/17 01:39:16 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/18 01:15:58 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,13 @@ void	echo(t_tokken_list *option)
 	return ;
 }
 
-// list 에 빈문자열 넣었을 때 segfault 뜨는 것 처리하기
+// list 에 빈문자열 넣었을 때 segfault 뜨는 것 처리하기. parsing 문제인듯 ?? export 까지 안옴
 // oldpwd 셋팅: cd 하기 전 oldpwd를 저장. 성공시 env_list->oldpwd = oldpwd. export list 와 envlist 에 넣기.
 // unset oldpwd 시 env_list->oldpwd = null, export list와 envlist에서 지우기
 // oldpwd 가 setting 되어있으면 dirpath = oldpwd
 // oldpwd 가 없으면 perror
 void	cd(t_env_var *env_list, t_tokken_list *option)
 {
-	t_env	*new;
 	int		result;
 	char	*oldpwd;
 	char	*directory_path;
@@ -53,11 +52,13 @@ void	cd(t_env_var *env_list, t_tokken_list *option)
 		perror(directory_path);
 		return ;
 	}
-	printf("oldpwd = %s\n", oldpwd);
-	new = make_new_node("OLDPWD", oldpwd);
-	if_replace_value(&env_list->exports, new);
-	if_replace_value(&env_list->envs, new);
-
+	if (check_same_varname(&env_list, "OLDPWD", oldpwd) == 0)
+	{
+		insert_in_export_lst(env_list->exports, make_new_node("OLDPWD", oldpwd));
+		insert_in_env_list(env_list->envs, make_new_node("OLDPWD", oldpwd));
+	}
+	free(oldpwd);
+	oldpwd = NULL;
 	return ;
 }
 
@@ -78,19 +79,16 @@ void	pwd(void)
 	return ;
 }
 
-// 아직 고치는중 .. 
 void	export(t_tokken_list *option, t_env_var **env_list)
 {
 	t_env		*new;
-	t_env_var	*tmp;
 	char		*varname;
 	char		*value;
 
 	new = NULL;
-	tmp = *env_list;
 	if (!option)
 	{
-		print_export_list(tmp->exports);
+		print_export_list((*env_list)->exports);
 		return ;
 	}
 	varname = option->content;
@@ -98,11 +96,10 @@ void	export(t_tokken_list *option, t_env_var **env_list)
 		value = option->next->content;
 	else
 		value = ft_strdup("");
-	new = make_new_node(varname, value);
-	if (if_replace_value(&tmp, new) == 1)
+	if (check_same_varname(env_list, varname, value) == 1)
 		return ;
-	insert_in_export_lst(&(*env_list)->exports, new);
-	insert_in_env_list(&(*env_list)->envs, new);
+	insert_in_export_lst(&(*env_list)->exports, make_new_node(varname, value));
+	insert_in_env_list(&(*env_list)->envs, make_new_node(varname, value));
 	free(varname);
 	free(value);
 	return ;

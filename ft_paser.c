@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_paser.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:08:50 by seojang           #+#    #+#             */
-/*   Updated: 2024/10/15 03:33:27 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/17 22:31:37 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,7 +316,7 @@ void	ft_dup(t_val *val, char **envp, t_env_var *env_list)
 			error("out dup2 failed", 2);
 		close(val->fd_out);
 	}
-	is_builtin = ft_check_bulitin(val->cmd, env_list);
+	is_builtin = ft_check_bulitin(val->cmd, &env_list);
 	if (is_builtin != 0)
 		return ;
 	execute_cmd(val->cmd, envp, env_list);

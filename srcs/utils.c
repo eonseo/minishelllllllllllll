@@ -3,26 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 17:10:04 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/16 22:32:31 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/18 01:52:46 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ms_test.h"
 
-char	*get_directory_path(t_env_var *env_list, char *path)
+char	*get_directory_path(t_env *lst, char *path)
 {
 	char	*homepath;
 
 	homepath = getenv("HOME");
 	if (*path == '~')
 		path = ft_strjoin(homepath, path);
-	// if (*path == '-')
-	// {
-	// 	if (env_list->oldpwd)
-	// }
+	//if (*path == '-')
+	//{
+	//	homepath = search_value_by_varname(lst, "OLDPWD");
+	//	if (homepath == NULL)
+
+	//}
 	return (path);
 }
 
@@ -113,4 +115,18 @@ int	compare_two_digits(char *s, int compare_num1, int compare_num2)
 			return (1);
 	}
 	return (0);
+}
+
+char	*search_value_by_varname(t_env *lst, char *varname)
+{
+	t_env	*tmp;
+
+	tmp = lst;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->varname, varname) == 0)
+			return (tmp->value);
+		tmp = tmp->next;
+	}
+	return (NULL);
 }

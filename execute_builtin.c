@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 00:29:03 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/17 00:20:34 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/17 22:32:37 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_code	is_builtin(t_tokken_list *lst)
 	return (0);
 }
 
-int	ft_check_bulitin(t_tokken_list *lst, t_env_var *env_list)
+int	ft_check_bulitin(t_tokken_list *lst, t_env_var **env_list)
 {
  	t_code			builtin_code;
 	t_tokken_list	*option;
@@ -44,18 +44,18 @@ int	ft_check_bulitin(t_tokken_list *lst, t_env_var *env_list)
 		return (0);
 	option = lst->next;
  	if (builtin_code == CD)
-		cd(env_list, option);
+		cd(*env_list, option);
 	else if (builtin_code == ECHO)
 		echo(option);
 	else if (builtin_code == ENV)
-		print_env_list(env_list->envs);
+		print_env_list((*env_list)->envs);
 	else if (builtin_code == EXIT)
 		do_exit(lst->next->content);
 	else if (builtin_code == EXPORT)
-		export(option, &env_list);
+		export(option, env_list);
 	else if (builtin_code == PWD)
 		pwd();
 	else
-		unset(option, &env_list);
+		unset(option, env_list);
 	return (1);
 }

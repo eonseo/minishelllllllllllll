@@ -3,26 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   insert_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eonoh <eonoh@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eonoh <eonoh@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:37 by eonoh             #+#    #+#             */
-/*   Updated: 2024/10/17 01:38:03 by eonoh            ###   ########.fr       */
+/*   Updated: 2024/10/18 00:59:58 by eonoh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ms_test.h"
 
-int	if_replace_value(t_env_var **lst, t_env *new)
+int	if_replace_value(t_env *tmp, char *varname, char *value)
 {
-	while (*lst && ft_strcmp((*lst)->exports->varname, new->varname) <= 0)
+	char	*origin_value;
+
+	if (ft_strcmp(tmp->varname, varname) == 0)
 	{
-		if (ft_strcmp((*lst)->exports->varname, new->varname) == 0)
+		if (value[0] != '\0')
 		{
-			(*lst)->exports->value = ft_strdup(new->value);
-			(*lst)->envs->value = ft_strdup(new->value);
-			free_node(&new);
-			return (1);
+			origin_value = tmp->value;
+			tmp->value = ft_strdup(value);
+			free(origin_value);
+			origin_value = NULL;
 		}
+		return (1);
+	}
+	return (0);
+}
+
+int	check_same_varname(t_env_var **lst, char *varname, char *value)
+{
+	t_env	*exports_tmp;
+	t_env	*envs_tmp;
+
+	exports_tmp = (*lst)->exports;
+	envs_tmp = (*lst)->envs;
+	while (exports_tmp && ft_strcmp(exports_tmp->varname, varname) <= 0)
+	{
+		if (if_replace_value(exports_tmp, varname, value) == 1)
+		{
+			while (envs_tmp)
+			{
+				if (if_replace_value(envs_tmp, varname, value) == 1)
+					return (1);
+				envs_tmp = envs_tmp->next;
+			}
+		}
+		exports_tmp = exports_tmp->next;
 	}
 	return (0);
 }
@@ -55,8 +81,7 @@ void	insert_at_end(t_env *node, t_env *new)
 		node->prev->next = new;
 		return ;
 	}
-	node->next = new;
-	new->prev = node;
+	lst_back(node, new);
 }
 
 void	lst_back(t_env *node, t_env *new)
